@@ -1,0 +1,26 @@
+CREATE TABLE IF NOT EXISTS ads (
+  id UUID PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  image_url TEXT NOT NULL,
+  link TEXT NOT NULL,
+  category TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS clicks (
+  id UUID PRIMARY KEY,
+  ad_id UUID NOT NULL REFERENCES ads(id) ON DELETE CASCADE,
+  timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  user_id TEXT NULL
+);
+
+CREATE TABLE IF NOT EXISTS impressions (
+  id UUID PRIMARY KEY,
+  ad_id UUID NOT NULL REFERENCES ads(id) ON DELETE CASCADE,
+  timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  user_id TEXT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_clicks_ad_id ON clicks(ad_id);
+CREATE INDEX IF NOT EXISTS idx_impressions_ad_id ON impressions(ad_id);
